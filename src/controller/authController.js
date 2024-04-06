@@ -1,5 +1,5 @@
-const userService = require("../services/user.service");
 const jwtProvider = require("../config/jwtProvider");
+const userService = require("../services/user.service");
 const bcrypt = require("bcrypt");
 const cartService = require("../services/cart.service");
 const register = async (req, res) => {
@@ -8,9 +8,9 @@ const register = async (req, res) => {
     const jwt = jwtProvider.generateToken(user._id);
 
     await cartService.createCart(user);
-    return res.status(200).sent({ jwt, message: "register success" });
+    return res.status(200).send({ jwt, message: "register success" });
   } catch (error) {
-    return res.status(500).sent({ error: error.message });
+    return res.status(500).send({ error: error.message });
   }
 };
 const login = async (req, res) => {
@@ -20,7 +20,7 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .sent({ message: "user not found with email:", email });
+        .send({ message: "user not found with email:", email });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -29,7 +29,7 @@ const login = async (req, res) => {
     const jwt = jwtProvider.generateToken(user._id);
     return res.status(200).send({ jwt, message: "login success" });
   } catch (error) {
-    return res.status(500).sent({ error: error.message });
+    return res.status(500).send({ error: error.message });
   }
 };
 
